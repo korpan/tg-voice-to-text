@@ -1,0 +1,21 @@
+services:
+  whisper-server:
+    image: ghcr.io/ggml-org/whisper.cpp:main
+    container_name: whisper-server
+    volumes:
+      - ./models:/models
+    command: ["./server", "-m", "/models/ggml-base.bin", "--port", "8080", "--host", "0.0.0.0"]
+    ports:
+      - "8080:8080"
+    restart: always
+
+  tg-bot-server:
+    build: ./tg-bot-server
+    container_name: tg-bot-server
+    depends_on:
+      - whisper-server
+    env_file:
+      - ./tg-bot-server/.env
+    environment:
+      - WHISPER_SERVER_URL=http://whisper-server:8080
+    restart: always
