@@ -4,7 +4,8 @@ services:
     container_name: whisper-server
     volumes:
       - ./models:/models
-    command: ["./server", "-m", "/models/ggml-base.bin", "--port", "8080", "--host", "0.0.0.0"]
+    entrypoint: ["whisper-server"]
+    command: ["-m", "/models/ggml-base.bin", "--port", "8080", "--host", "0.0.0.0"]
     ports:
       - "8080:8080"
     restart: always
