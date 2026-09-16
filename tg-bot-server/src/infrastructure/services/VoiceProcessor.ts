@@ -2,16 +2,16 @@ import axios from 'axios';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import FormData from 'form-data';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import { IVoiceProcessor } from '../../domain/services/IVoiceProcessor';
 import { ITelegramFileDownloader } from '../../domain/services/ITelegramFileDownloader';
+import { IAudioConverter } from '../../domain/services/IAudioConverter';
 import { Config } from '../config/Config';
 
-const execPromise = promisify(exec);
-
 export class VoiceProcessor implements IVoiceProcessor {
-  constructor(private fileDownloader: ITelegramFileDownloader) {}
+  constructor(
+    private fileDownloader: ITelegramFileDownloader,
+    private audioConverter: IAudioConverter
+  ) {}
 
   async process(fileId: string): Promise<string> {
     let downloadedPath: string | null = null;
@@ -22,8 +22,7 @@ export class VoiceProcessor implements IVoiceProcessor {
       downloadedPath = await this.fileDownloader.downloadFile(fileId);
 
       // Convert to 16-bit WAV (16kHz, mono, pcm_s16le)
-      convertedPath = `${downloadedPath}.wav`;
-      await execPromise(`ffmpeg -i "${downloadedPath}" -ar 16000 -ac 1 -c:a pcm_s16le "${convertedPath}" -y`);
+      convertedPath = await this.audioConverter.convertToWav(downloadedPath);
 
       // 2. Send to Whisper Server via HTTP
       const serverUrl = Config.WHISPER_SERVER_URL;

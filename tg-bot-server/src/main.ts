@@ -2,6 +2,7 @@ import { Config } from './infrastructure/config/Config';
 import { InMemoryUserRepository } from './infrastructure/repositories/InMemoryUserRepository';
 import { VoiceProcessor } from './infrastructure/services/VoiceProcessor';
 import { TelegramFileDownloader } from './infrastructure/services/TelegramFileDownloader';
+import { FFmpegAudioConverter } from './infrastructure/services/FFmpegAudioConverter';
 import { HandleMessageUseCase } from './application/use-cases/HandleMessageUseCase';
 import { TelegramBotAdapter } from './infrastructure/bot/TelegramBotAdapter';
 import { StartAction } from './application/actions/StartAction';
@@ -13,7 +14,8 @@ async function bootstrap() {
     // 1. Infrastructure: Services & Repositories
     const userRepository = new InMemoryUserRepository();
     const fileDownloader = new TelegramFileDownloader();
-    const voiceProcessor = new VoiceProcessor(fileDownloader);
+    const audioConverter = new FFmpegAudioConverter();
+    const voiceProcessor = new VoiceProcessor(fileDownloader, audioConverter);
 
     // 2. Application: Actions
     const startAction = new StartAction();
