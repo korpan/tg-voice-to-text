@@ -15,7 +15,11 @@ export class HandleMessageUseCase {
     const user: User = {
       id: request.userId,
       username: request.username,
+      firstName: request.firstName,
+      lastName: request.lastName,
+      languageCode: request.languageCode,
     };
+
 
     await this.userRepository.saveUser(user);
 

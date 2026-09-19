@@ -16,8 +16,12 @@ export class TelegramBotAdapter {
       const request: MessageRequest = {
         userId: ctx.from.id,
         username: ctx.from.username,
+        firstName: ctx.from.first_name,
+        lastName: ctx.from.last_name,
+        languageCode: ctx.from.language_code,
         text: ctx.message.text,
       };
+
 
       try {
         const response = await this.handleMessageUseCase.execute(request);
@@ -32,8 +36,12 @@ export class TelegramBotAdapter {
       const request: MessageRequest = {
         userId: ctx.from.id,
         username: ctx.from.username,
+        firstName: ctx.from.first_name,
+        lastName: ctx.from.last_name,
+        languageCode: ctx.from.language_code,
         voiceFileId: ctx.message.voice.file_id,
       };
+
 
       try {
         const response = await this.handleMessageUseCase.execute(request);

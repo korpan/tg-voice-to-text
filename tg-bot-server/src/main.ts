@@ -1,5 +1,5 @@
 import { Config } from './infrastructure/config/Config';
-import { InMemoryUserRepository } from './infrastructure/repositories/InMemoryUserRepository';
+import { SqliteUserRepository } from './infrastructure/repositories/SqliteUserRepository';
 import { VoiceProcessor } from './infrastructure/services/VoiceProcessor';
 import { TelegramFileDownloader } from './infrastructure/services/TelegramFileDownloader';
 import { FFmpegAudioConverter } from './infrastructure/services/FFmpegAudioConverter';
@@ -12,7 +12,7 @@ import { DefaultEchoAction } from './application/actions/DefaultEchoAction';
 async function bootstrap() {
   try {
     // 1. Infrastructure: Services & Repositories
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new SqliteUserRepository();
     const fileDownloader = new TelegramFileDownloader();
     const audioConverter = new FFmpegAudioConverter();
     const voiceProcessor = new VoiceProcessor(fileDownloader, audioConverter);
